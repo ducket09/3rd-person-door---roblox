@@ -1,0 +1,44 @@
+local player = game.Players.LocalPlayer
+local camera = workspace.CurrentCamera
+local UserInputService = game:GetService("UserInputService")
+
+-- Adjustable offset values
+local offsetX = 0
+local offsetY = 5
+local offsetZ = -10
+
+-- Function to handle camera state based on right-click
+local function HandleCameraState()
+    if UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton2) then
+        -- Right-click pressed, lock the camera and make it face relative to the player with offset
+        local humanoid = player.Character and player.Character:FindFirstChild("Humanoid")
+        local rootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+
+        if humanoid and rootPart then
+            local lookVector = rootPart.CFrame.lookVector
+            local offset = Vector3.new(offsetX, offsetY, offsetZ)
+            local newPosition = rootPart.Position + lookVector * offsetZ + Vector3.new(offsetX, offsetY, 0)
+            local newCFrame = CFrame.new(newPosition, rootPart.Position + lookVector)
+            camera.CFrame = newCFrame
+            player.CameraMode = Enum.CameraMode.LockFirstPerson
+        end
+    else
+        -- Right-click not pressed, set camera to 3rd person emulating the right-click camera
+        local humanoid = player.Character and player.Character:FindFirstChild("Humanoid")
+        local rootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+
+        if humanoid and rootPart then
+            local offset = Vector3.new(offsetX, offsetY, offsetZ)
+            local newPosition = rootPart.Position + rootPart.CFrame.lookVector * offset.Z + Vector3.new(0, offset.Y, 0)
+            local newCFrame = CFrame.new(newPosition, rootPart.Position)
+            camera.CFrame = newCFrame
+            player.CameraMode = Enum.CameraMode.Classic
+        end
+    end
+end
+
+-- Connect the function to the RenderStepped event for continuous updates
+game:GetService("RunService").RenderStepped:Connect(function()
+    HandleCameraState()
+    wait()  -- Adjust the wait time as needed
+end)
