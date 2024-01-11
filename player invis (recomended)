@@ -17,5 +17,9 @@ local function SetTransparency()
     end
 end
 
--- Call the function to set transparency immediately
-SetTransparency()
+-- Forever loop to continuously update transparency
+while true do
+    SetTransparency()
+    wait(1)  -- Adjust the wait time as needed
+end
+
