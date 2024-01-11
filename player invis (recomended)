@@ -1,0 +1,21 @@
+local player = game.Players.LocalPlayer
+
+-- Adjustable transparency value
+local targetTransparency = 0.5  -- Adjust as needed
+
+-- Function to set transparency
+local function SetTransparency()
+    local character = player.Character
+    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+
+    if humanoid then
+        for _, part in pairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.LocalTransparencyModifier = targetTransparency
+            end
+        end
+    end
+end
+
+-- Call the function to set transparency immediately
+SetTransparency()
